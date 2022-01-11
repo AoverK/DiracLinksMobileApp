@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -7,16 +8,19 @@
  */
 
 import React from 'react';
-import {Node} from 'react';
+import {Node, useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 
-import { BleManager } from 'react-native-ble-plx';
+import {BleManager} from 'react-native-ble-plx';
+
+export const manager = new BleManager();
 
 import {
   Button,
   Pressable,
+  FlatList,
   Image,
   ImageBackground,
   SafeAreaView,
@@ -27,6 +31,7 @@ import {
   TextInput,
   useColorScheme,
   View,
+  PermissionsAndroid,
 } from 'react-native';
 
 import {
@@ -36,6 +41,20 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+const requestPermission = async () => {
+  const granted = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    {
+      title: 'Request for Location Permission',
+      message: 'Bluetooth Scanner requires access to Fine Location Permission',
+      buttonNeutral: 'Ask Me Later',
+      buttonNegative: 'Cancel',
+      buttonPositive: 'OK',
+    },
+  );
+  return granted === PermissionsAndroid.RESULTS.GRANTED;
+};
 
 const Stack = createNativeStackNavigator();
 
@@ -159,12 +178,295 @@ const SignUpScreen = ({navigation}) => {
     </View>
   );
 };
+
+const LogInScreen = ({navigation}) => {
+  const [logInUsernameText, onChangeLogInUsernameText] = React.useState(null);
+  const [logInPasswordText, onChangeLogInPasswordText] = React.useState(null);
+  return (
+    <View style={styles.backgroundStyle}>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.screenTitleHeader}>Welcome Back</Text>
+        <Text style={styles.screenTitleSubHeader}>Log In</Text>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+        }}>
+        <Text style={styles.formFieldLabel}>Email</Text>
+        <View style={styles.formFieldTextView}>
+          <TextInput
+            style={styles.formFieldTextInput}
+            onChangeText={onChangeLogInUsernameText}
+            value={logInUsernameText}
+            placeholder="Enter username"
+            keyboardType="email-address"
+          />
+        </View>
+        <Text style={styles.formFieldLabel}>Password</Text>
+        <View style={styles.formFieldTextView}>
+          <TextInput
+            style={styles.formFieldTextInput}
+            signUpPasswordText={onChangeLogInPasswordText}
+            value={logInPasswordText}
+            placeholder="Enter password"
+            secureTextEntry={true}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          title="Log In"
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('Log In')}>
+          <Text style={styles.buttonText}>Log In</Text>
+        </Pressable>
+        <Text>
+          Don't have an account?{' '}
+          <Text
+            style={{
+              color: '#2F9BC1',
+              textDecorationLine: 'underline',
+            }}
+            onPress={() => navigation.navigate('Sign Up')}>
+            Sign Up here
+          </Text>
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+// BlueetoothScanner does:
+// - access/enable bluetooth module
+// - scan bluetooth devices in the area
+// - list the scanned devices
+const ConnectScreen = () => {
+  const [logData, setLogData] = useState([]);
+  const [logCount, setLogCount] = useState(0);
+  const [scannedDevices, setScannedDevices] = useState({});
+  const [deviceCount, setDeviceCount] = useState(0);
+  const [scannedServices, setScannedServices] = useState({});
+  const [servicesCount, setServicesCount] = useState(0);
+  //const [bluetoothOnState, setBluetoothOnState] = useState(false);
+
+  useEffect(() => {
+    manager.onStateChange(state => {
+      const subscription = manager.onStateChange(async state => {
+        console.log(state);
+        const newLogData = logData;
+        newLogData.push(state);
+        await setLogCount(newLogData.length);
+        await setLogData(newLogData);
+        subscription.remove();
+      }, true);
+      return () => subscription.remove();
+    });
+  }, [manager]);
+
+  const activateBluetooth = async () => {
+    const btState = await manager.state();
+    // test is bluetooth is supported
+    if (btState === 'Unsupported') {
+      alert('Bluetooth is not supported');
+      return false;
+    }
+    // enable if it is not powered on
+    if (btState !== 'PoweredOn') {
+      //setBluetoothOnState(true);
+      await manager.enable();
+    } else {
+      await manager.disable();
+      //setBluetoothOnState(false);
+    }
+    return true;
+  };
+
+  //HSP2SPO2_3_4.6: 80:6F:B0:D6:F0:4A
+  const deviceId = '80:6F:B0:D6:F0:4A';
+
+  return (
+    <View style={{flex: 1, padding: 10}}>
+      <View style={{flex: 1, padding: 10}}>
+        <Text style={{fontWeight: 'bold'}}>Bluetooth Log ({logCount})</Text>
+        <FlatList
+          data={logData}
+          renderItem={({item}) => {
+            return <Text>{item}</Text>;
+          }}
+        />
+        <Button
+          styles={styles.primaryButton}
+          title="Turn On Bluetooth"
+          onPress={activateBluetooth}
+        />
+      </View>
+
+      <View style={{flex: 1, padding: 10}}>
+        <Text style={{fontWeight: 'bold'}}>
+          Scanned Devices ({deviceCount})
+        </Text>
+        <FlatList
+          data={Object.values(scannedDevices)}
+          renderItem={({item}) => {
+            return <Text>{`${item.name} (${item.id})`}</Text>;
+          }}
+        />
+        <Button
+          title="Scan Devices"
+          onPress={async () => {
+            const btState = await manager.state();
+            // test if bluetooth is powered on
+            if (btState !== 'PoweredOn') {
+              alert('Bluetooth is not powered on');
+              return false;
+            }
+            // explicitly ask for user's permission
+            const permission = await requestPermission();
+            if (permission) {
+              manager.startDeviceScan(null, null, async (error, device) => {
+                // error handling
+                if (error) {
+                  console.log(error);
+                  return;
+                }
+                // found a bluetooth device
+                if (device.id === deviceId) {
+                  console.log(`${device.name} (${device.id})}`);
+                  const newScannedDevices = scannedDevices;
+                  newScannedDevices[device.id] = device;
+                  await setDeviceCount(Object.keys(newScannedDevices).length);
+                  await setScannedDevices(scannedDevices);
+                }
+              });
+            }
+            return true;
+          }}
+        />
+      </View>
+      <View style={{flex: 1, padding: 10}}>
+        <Text style={{fontWeight: 'bold'}}>Services ({servicesCount})</Text>
+        <FlatList
+          data={Object.values(scannedServices)}
+          renderItem={({item}) => {
+            return <Text>{`${item.name}`}</Text>;
+          }}
+        />
+        <Button
+          title="Connect"
+          onPress={async () => {
+            manager
+              .connectToDevice(deviceId, {
+                autoconnect: true,
+              })
+              .then(() => {
+                async () => {
+                  const services =
+                    await device.discoverAllServicesAndCharacteristics();
+                };
+                alert('connect');
+                console.log('!res success');
+                let servicesAll =
+                  manager.discoverAllServicesAndCharacteristics(deviceId);
+                console.log('Services: ', servicesAll);
+
+                manager
+                  .discoverAllServicesAndCharacteristics(deviceId)
+                  .then(info => {
+                    console.log('!info', info);
+                    const newScannedServices = scannedServices;
+                    //newScannedServices[device.id] = device;
+                    setServicesCount(Object.keys(newScannedServices).length);
+                    setScannedServices(scannedDevices);
+                  });
+              })
+              .catch(() => {
+                console.log('!res error');
+              });
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
+/* const ConnectScreen = ({navigation}) => {
+  return (
+    <View style={styles.backgroundStyle}>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.screenTitleHeader}>Start Your Journey</Text>
+        <Text style={styles.screenTitleSubHeader}>Connect To DiracLinks</Text>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+        }}>
+        <Text>
+          You aren’t connected. Turn on and connect to your DiractLink to start
+          your wellness journey
+        </Text>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          title="Log In"
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('Log In')}>
+          <Text style={styles.buttonText}>Connect</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}; */
+
+/* const ConnectScreen = ({navigation}) => {
+  return (
+    <View style={styles.backgroundStyle}>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.screenTitleHeader}>Start Your Journey</Text>
+        <Text style={styles.screenTitleSubHeader}>Connect To DiracLinks</Text>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+        }}>
+        <Text>
+          You aren’t connected. Turn on and connect to your DiractLink to start
+          your wellness journey
+        </Text>
+      </View>
+      <View
+        style={{
+          margin: 20,
+          width: 300,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          title="Log In"
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('Log In')}>
+          <Text style={styles.buttonText}>Connect</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}; */
+
 const SignUp = ({navigation}) => {
-  const [signUpUsernameText, onChangeSignUpUsernameText] = React.useState(null);
-  const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
-  const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] =
-    React.useState(null);
-  // const [number, onChangeNumber] = React.useState(null);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -180,6 +482,33 @@ const SignUp = ({navigation}) => {
 
 const LogIn = ({navigation}) => {
   return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={LogInScreen}
+        options={{
+          headerRight: props => <LogoTitle {...props} />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const Connect = ({navigation}) => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={ConnectScreen}
+        options={{
+          headerRight: props => <LogoTitle {...props} />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+/* const LogIn = ({navigation}) => {
+  return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Log In Screen</Text>
       <Button
@@ -190,8 +519,9 @@ const LogIn = ({navigation}) => {
       <Button title="Go Back" onPress={() => navigation.goBack()} />
     </View>
   );
-};
-const Connect = ({navigation}) => {
+}; */
+
+/* const Connect = ({navigation}) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Connect</Text>
@@ -202,7 +532,8 @@ const Connect = ({navigation}) => {
       />
     </View>
   );
-};
+}; */
+
 /* const SignUp = ({navigation}) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
