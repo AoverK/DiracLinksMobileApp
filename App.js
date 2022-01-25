@@ -8,10 +8,11 @@
  */
 
 import React from 'react';
-import {Node, useState, useEffect} from 'react';
+import {Node, useState, useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
+import base64 from 'react-native-base64';
 
 import {BleManager} from 'react-native-ble-plx';
 
@@ -55,6 +56,10 @@ const requestPermission = async () => {
   );
   return granted === PermissionsAndroid.RESULTS.GRANTED;
 };
+
+function onReceiveData(data) {
+  console.log(data);
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -252,6 +257,7 @@ const ConnectScreen = () => {
   const [logCount, setLogCount] = useState(0);
   const [scannedDevices, setScannedDevices] = useState({});
   const [deviceCount, setDeviceCount] = useState(0);
+  const [currentDevice, setCurrentDevice] = useState(0);
   const [scannedServices, setScannedServices] = useState({});
   const [servicesCount, setServicesCount] = useState(0);
   //const [bluetoothOnState, setBluetoothOnState] = useState(false);
@@ -289,7 +295,7 @@ const ConnectScreen = () => {
   };
 
   //HSP2SPO2_3_4.6: 80:6F:B0:D6:F0:4A
-  const deviceId = '80:6F:B0:D6:F0:4A';
+  const hrmDeviceId = '80:6F:B0:D6:F0:4A';
 
   return (
     <View style={{flex: 1, padding: 10}}>
@@ -337,12 +343,42 @@ const ConnectScreen = () => {
                   return;
                 }
                 // found a bluetooth device
-                if (device.id === deviceId) {
+                if (device.id === hrmDeviceId) {
                   console.log(`${device.name} (${device.id})}`);
                   const newScannedDevices = scannedDevices;
                   newScannedDevices[device.id] = device;
                   await setDeviceCount(Object.keys(newScannedDevices).length);
                   await setScannedDevices(scannedDevices);
+                  //this.manager.stopDeviceScan();
+                  await device
+                    .connect()
+                    .then(connectedDevice => {
+                      console.log('Device Connected');
+                      return connectedDevice.discoverAllServicesAndCharacteristics();
+                    })
+                    .then(connectedDevice => {
+                      console.info(connectedDevice);
+                      manager.monitorCharacteristicForDevice(
+                        '80:6F:B0:D6:F0:4A',
+                        '0000180d-0000-1000-8000-00805f9b34fb',
+                        '00002a37-0000-1000-8000-00805f9b34fb',
+                        // Callback function triggered for every incoming data
+                        (err, msg) => {
+                          if (msg !== null) {
+                            const rawData = base64.decode(msg.value);
+                            // Process the data with the Action Creator
+                            onReceiveData(rawData);
+                            onReceiveData(msg.value);
+                          }
+                        },
+                        'dataUpdate',
+                      );
+                      return connectedDevice.services();
+                    })
+                    .catch(error => {
+                      console.log('Device Connection Error');
+                      console.log(error);
+                    });
                 }
               });
             }
@@ -361,14 +397,16 @@ const ConnectScreen = () => {
         <Button
           title="Connect"
           onPress={async () => {
-            manager
-              .connectToDevice(deviceId, {
-                autoconnect: true,
-              })
+            currentDevice
+              .connect()
               .then(() => {
                 async () => {
                   const services =
-                    await device.discoverAllServicesAndCharacteristics();
+                    await currentDevice.discoverAllServicesAndCharacteristics(
+                      currentDevice.id,
+                    );
+                  alert(services);
+                  setScannedServices(services);
                 };
                 alert('connect');
                 console.log('!res success');
