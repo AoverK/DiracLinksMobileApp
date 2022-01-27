@@ -13,6 +13,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 import base64 from 'react-native-base64';
+//import {Buffer} from 'buffer';
+/*
+//var Buffer = require('@craftzdog/react-native-buffer').Buffer;
+global.Buffer = global.Buffer || require('buffer').Buffer; */
 
 import {BleManager} from 'react-native-ble-plx';
 
@@ -365,10 +369,30 @@ const ConnectScreen = () => {
                         // Callback function triggered for every incoming data
                         (err, msg) => {
                           if (msg !== null) {
-                            const rawData = base64.decode(msg.value);
+                            var heartRate = -1;
+                            var rawDataDecoded = base64.decode(msg.value);
+                            const decodedBuffer = Buffer.from(rawDataDecoded);
+                            console.log(decodedBuffer);
+                            //console.log(rawDataDecoded.toString(2));
+                            /* const decodedBuffer = Buffer.from(rawDataDecoded);
+                            const firstBitValue =
+                            decodedBuffer.readInt8(0) & 0x01;
                             // Process the data with the Action Creator
-                            onReceiveData(rawData);
-                            onReceiveData(msg.value);
+                            if (firstBitValue == 0) {
+                              // Heart Rate Value Format is in the 2nd byte
+                              heartRate = decodedBuffer.readUInt8(1);
+                            } else {
+                              // Heart Rate Value Format is in the 2nd and 3rd bytes
+                              heartRate =
+                                (decodedBuffer.readInt8(1) << 8) +
+                                decodedBuffer.readInt8(2);
+                            } */
+
+                            //onReceiveData(rawDataDecoded);
+                            onReceiveData(msg.value.toString(2));
+                          }
+                          if (err) {
+                            console.log('HeartRateMonitor', error);
                           }
                         },
                         'dataUpdate',
