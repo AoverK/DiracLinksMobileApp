@@ -6,14 +6,18 @@
  * @format
  * @flow strict-local
  */
-
+import './shim.js'
 import React from 'react';
 import {Node, useState, useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
-import base64 from 'react-native-base64';
-//import {Buffer} from 'buffer';
+//import base64 from 'react-native-base64';
+//var Buffer = require("@craftzdog/react-native-buffer").Buffer;
+import {Buffer} from 'buffer';
+global.Buffer = Buffer;
+
+
 /*
 //var Buffer = require('@craftzdog/react-native-buffer').Buffer;
 global.Buffer = global.Buffer || require('buffer').Buffer; */
@@ -361,35 +365,40 @@ const ConnectScreen = () => {
                       return connectedDevice.discoverAllServicesAndCharacteristics();
                     })
                     .then(connectedDevice => {
-                      console.info(connectedDevice);
+                      //console.info(connectedDevice);
+                      /* '80:6F:B0:D6:F0:4A', 
+                        '0000180d-0000-1000-8000-00805f9b34fb',
+                        '00002a37-0000-1000-8000-00805f9b34fb', */
                       manager.monitorCharacteristicForDevice(
-                        '80:6F:B0:D6:F0:4A',
+                        '80:6F:B0:D6:F0:4A', 
                         '0000180d-0000-1000-8000-00805f9b34fb',
                         '00002a37-0000-1000-8000-00805f9b34fb',
                         // Callback function triggered for every incoming data
                         (err, msg) => {
-                          if (msg !== null) {
-                            var heartRate = -1;
-                            var rawDataDecoded = base64.decode(msg.value);
-                            const decodedBuffer = Buffer.from(rawDataDecoded);
-                            console.log(decodedBuffer);
-                            //console.log(rawDataDecoded.toString(2));
-                            /* const decodedBuffer = Buffer.from(rawDataDecoded);
-                            const firstBitValue =
-                            decodedBuffer.readInt8(0) & 0x01;
-                            // Process the data with the Action Creator
+                          //if (msg !== null) {
+                          if (msg && msg.value) {
+                            let heartRate = -1;
+                            let decodedBuffer = Buffer.from(msg.value, 'base64');
+                            let firstBitValue = decodedBuffer.readInt8(0) & 0x01;
+                            //var decodedBufferTest = Buffer.from(msg.value); //https://github.com/feross/buffer#convert-arraybuffer-to-buffer
+                            //var firstBitValueTest = decodedBufferTest.readUInt8(1);
+                            
                             if (firstBitValue == 0) {
                               // Heart Rate Value Format is in the 2nd byte
                               heartRate = decodedBuffer.readUInt8(1);
+                              console.log("Decoded Buffer 1: ",decodedBuffer);
+                              console.log("Heart Rate 1: ",heartRate);
+                              var heartRate2 =  (decodedBuffer.readInt8(1) << 8) + decodedBuffer.readInt8(2);
+                              console.log("Heart Rate 2: ",heartRate2);
                             } else {
                               // Heart Rate Value Format is in the 2nd and 3rd bytes
-                              heartRate =
-                                (decodedBuffer.readInt8(1) << 8) +
-                                decodedBuffer.readInt8(2);
-                            } */
+                              heartRate =  (decodedBuffer.readInt8(1) << 8) + decodedBuffer.readInt8(2);
+                              console.log("Heart Rate 2: ",heartRate);
+                            }
+                            //callback({heartRate: heartRate, error: null});
 
                             //onReceiveData(rawDataDecoded);
-                            onReceiveData(msg.value.toString(2));
+                            //onReceiveData(msg.value.toString(2));
                           }
                           if (err) {
                             console.log('HeartRateMonitor', error);
