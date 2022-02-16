@@ -370,9 +370,9 @@ const ConnectScreen = () => {
                         '0000180d-0000-1000-8000-00805f9b34fb',
                         '00002a37-0000-1000-8000-00805f9b34fb', */
                       manager.monitorCharacteristicForDevice(
-                        '80:6F:B0:D6:F0:4A', 
-                        '0000180d-0000-1000-8000-00805f9b34fb',
-                        '00002a37-0000-1000-8000-00805f9b34fb',
+                        device.id,
+                        '180D',
+                        '2A37',
                         // Callback function triggered for every incoming data
                         (err, msg) => {
                           //if (msg !== null) {
