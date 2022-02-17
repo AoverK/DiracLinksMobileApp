@@ -377,6 +377,7 @@ const ConnectScreen = () => {
                         (err, msg) => {
                           //if (msg !== null) {
                           if (msg && msg.value) {
+                            console.log(msg);
                             let heartRate = -1;
                             let decodedBuffer = Buffer.from(msg.value, 'base64');
                             let firstBitValue = decodedBuffer.readInt8(0) & 0x01;
