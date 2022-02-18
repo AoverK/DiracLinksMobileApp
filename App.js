@@ -387,6 +387,7 @@ const ConnectScreen = () => {
                             if (firstBitValue == 0) {
                               // Heart Rate Value Format is in the 2nd byte
                               heartRate = decodedBuffer.readUInt8(1);
+                              console.log("Message Value 1: ",msg.value);
                               console.log("Decoded Buffer 1: ",decodedBuffer);
                               console.log("Heart Rate 1: ",heartRate);
                               var heartRate2 =  (decodedBuffer.readInt8(1) << 8) + decodedBuffer.readInt8(2);
