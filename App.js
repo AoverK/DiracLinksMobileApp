@@ -12,8 +12,8 @@ import {Node, useState, useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
-//import base64 from 'react-native-base64';
 //var Buffer = require("@craftzdog/react-native-buffer").Buffer;
+
 import {Buffer} from 'buffer';
 global.Buffer = Buffer;
 
@@ -50,6 +50,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Route from './app/route';
 
 const requestPermission = async () => {
   const granted = await PermissionsAndroid.request(
@@ -80,7 +81,7 @@ const LogoTitle = ({navigation}) => {
   );
 };
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   return (
     <View>
       <ImageBackground
@@ -94,7 +95,9 @@ const HomeScreen = ({navigation}) => {
           <Pressable
             title="Log In"
             style={styles.primaryButton}
-            onPress={() => navigation.navigate('Log In')}>
+            // onPress={()=> alert("login")}
+            onPress={() => navigation.navigate('login')}
+            >
             <Text style={styles.buttonText}>Log In</Text>
           </Pressable>
           <Pressable
@@ -103,158 +106,158 @@ const HomeScreen = ({navigation}) => {
             onPress={() => navigation.navigate('Sign Up')}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
-          <Pressable
+          {/* <Pressable
             title="Connect"
             style={styles.tertiaryButton}
             onPress={() => navigation.navigate('Connect')}>
             <Text style={styles.buttonText}>Connect</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       </ImageBackground>
     </View>
   );
 };
 
-const SignUpScreen = ({navigation}) => {
-  const [signUpUsernameText, onChangeSignUpUsernameText] = React.useState(null);
-  const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
-  const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] =
-    React.useState(null);
-  // const [number, onChangeNumber] = React.useState(null);
-  return (
-    <View style={styles.backgroundStyle}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={styles.screenTitleHeader}>Get Started</Text>
-        <Text style={styles.screenTitleSubHeader}>Sign Up</Text>
-      </View>
-      <View
-        style={{
-          margin: 20,
-          width: 300,
-        }}>
-        <Text style={styles.formFieldLabel}>Email</Text>
-        <View style={styles.formFieldTextView}>
-          <TextInput
-            style={styles.formFieldTextInput}
-            onChangeText={onChangeSignUpUsernameText}
-            value={signUpUsernameText}
-            placeholder="Enter email address"
-            keyboardType="email-address"
-          />
-        </View>
-        <Text style={styles.formFieldLabel}>Password</Text>
-        <View style={styles.formFieldTextView}>
-          <TextInput
-            style={styles.formFieldTextInput}
-            signUpPasswordText={onChangeSignUpPasswordText}
-            value={signUpPasswordText}
-            placeholder="Enter password"
-            secureTextEntry={true}
-          />
-        </View>
-        <Text style={styles.formFieldLabel}>Confirm Password</Text>
-        <View style={styles.formFieldTextView}>
-          <TextInput
-            style={styles.formFieldTextInput}
-            signUpConfirmPasswordText={onChangeSignUpConfirmPasswordText}
-            value={signUpConfirmPasswordText}
-            placeholder="Confirm password"
-            secureTextEntry={true}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          margin: 20,
-          width: 300,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Pressable
-          title="Sign Up"
-          style={styles.primaryButton}
-          onPress={() => navigation.navigate('Sign Up')}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </Pressable>
-        <Text>
-          Already have an account?{' '}
-          <Text
-            style={{
-              color: '#2F9BC1',
-              textDecorationLine: 'underline',
-            }}
-            onPress={() => navigation.navigate('Log In')}>
-            Log In here
-          </Text>
-        </Text>
-      </View>
-    </View>
-  );
-};
+// const SignUpScreen = ({navigation}) => {
+//   const [signUpUsernameText, onChangeSignUpUsernameText] = React.useState(null);
+//   const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
+//   const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] =
+//     React.useState(null);
+//   // const [number, onChangeNumber] = React.useState(null);
+//   return (
+//     <View style={styles.backgroundStyle}>
+//       <View style={{alignItems: 'center', justifyContent: 'center'}}>
+//         <Text style={styles.screenTitleHeader}>Get Started</Text>
+//         <Text style={styles.screenTitleSubHeader}>Sign Up</Text>
+//       </View>
+//       <View
+//         style={{
+//           margin: 20,
+//           width: 300,
+//         }}>
+//         <Text style={styles.formFieldLabel}>Email</Text>
+//         <View style={styles.formFieldTextView}>
+//           <TextInput
+//             style={styles.formFieldTextInput}
+//             onChangeText={onChangeSignUpUsernameText}
+//             value={signUpUsernameText}
+//             placeholder="Enter email address"
+//             keyboardType="email-address"
+//           />
+//         </View>
+//         <Text style={styles.formFieldLabel}>Password</Text>
+//         <View style={styles.formFieldTextView}>
+//           <TextInput
+//             style={styles.formFieldTextInput}
+//             signUpPasswordText={onChangeSignUpPasswordText}
+//             value={signUpPasswordText}
+//             placeholder="Enter password"
+//             secureTextEntry={true}
+//           />
+//         </View>
+//         <Text style={styles.formFieldLabel}>Confirm Password</Text>
+//         <View style={styles.formFieldTextView}>
+//           <TextInput
+//             style={styles.formFieldTextInput}
+//             signUpConfirmPasswordText={onChangeSignUpConfirmPasswordText}
+//             value={signUpConfirmPasswordText}
+//             placeholder="Confirm password"
+//             secureTextEntry={true}
+//           />
+//         </View>
+//       </View>
+//       <View
+//         style={{
+//           margin: 20,
+//           width: 300,
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//         }}>
+//         <Pressable
+//           title="Sign Up"
+//           style={styles.primaryButton}
+//           onPress={() => navigation.navigate('Sign Up')}>
+//           <Text style={styles.buttonText}>Sign Up</Text>
+//         </Pressable>
+//         <Text>
+//           Already have an account?{' '}
+//           <Text
+//             style={{
+//               color: '#2F9BC1',
+//               textDecorationLine: 'underline',
+//             }}
+//             onPress={() => navigation.navigate('Log In')}>
+//             Log In here
+//           </Text>
+//         </Text>
+//       </View>
+//     </View>
+//   );
+// };
 
-const LogInScreen = ({navigation}) => {
-  const [logInUsernameText, onChangeLogInUsernameText] = React.useState(null);
-  const [logInPasswordText, onChangeLogInPasswordText] = React.useState(null);
-  return (
-    <View style={styles.backgroundStyle}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={styles.screenTitleHeader}>Welcome Back</Text>
-        <Text style={styles.screenTitleSubHeader}>Log In</Text>
-      </View>
-      <View
-        style={{
-          margin: 20,
-          width: 300,
-        }}>
-        <Text style={styles.formFieldLabel}>Email</Text>
-        <View style={styles.formFieldTextView}>
-          <TextInput
-            style={styles.formFieldTextInput}
-            onChangeText={onChangeLogInUsernameText}
-            value={logInUsernameText}
-            placeholder="Enter username"
-            keyboardType="email-address"
-          />
-        </View>
-        <Text style={styles.formFieldLabel}>Password</Text>
-        <View style={styles.formFieldTextView}>
-          <TextInput
-            style={styles.formFieldTextInput}
-            signUpPasswordText={onChangeLogInPasswordText}
-            value={logInPasswordText}
-            placeholder="Enter password"
-            secureTextEntry={true}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          margin: 20,
-          width: 300,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Pressable
-          title="Log In"
-          style={styles.primaryButton}
-          onPress={() => navigation.navigate('Log In')}>
-          <Text style={styles.buttonText}>Log In</Text>
-        </Pressable>
-        <Text>
-          Don't have an account?{' '}
-          <Text
-            style={{
-              color: '#2F9BC1',
-              textDecorationLine: 'underline',
-            }}
-            onPress={() => navigation.navigate('Sign Up')}>
-            Sign Up here
-          </Text>
-        </Text>
-      </View>
-    </View>
-  );
-};
+// const LogInScreen = ({navigation}) => {
+//   const [logInUsernameText, onChangeLogInUsernameText] = React.useState(null);
+//   const [logInPasswordText, onChangeLogInPasswordText] = React.useState(null);
+//   return (
+//     <View style={styles.backgroundStyle}>
+//       <View style={{alignItems: 'center', justifyContent: 'center'}}>
+//         <Text style={styles.screenTitleHeader}>Welcome Back</Text>
+//         <Text style={styles.screenTitleSubHeader}>Log In</Text>
+//       </View>
+//       <View
+//         style={{
+//           margin: 20,
+//           width: 300,
+//         }}>
+//         <Text style={styles.formFieldLabel}>Email</Text>
+//         <View style={styles.formFieldTextView}>
+//           <TextInput
+//             style={styles.formFieldTextInput}
+//             onChangeText={onChangeLogInUsernameText}
+//             value={logInUsernameText}
+//             placeholder="Enter username"
+//             keyboardType="email-address"
+//           />
+//         </View>
+//         <Text style={styles.formFieldLabel}>Password</Text>
+//         <View style={styles.formFieldTextView}>
+//           <TextInput
+//             style={styles.formFieldTextInput}
+//             signUpPasswordText={onChangeLogInPasswordText}
+//             value={logInPasswordText}
+//             placeholder="Enter password"
+//             secureTextEntry={true}
+//           />
+//         </View>
+//       </View>
+//       <View
+//         style={{
+//           margin: 20,
+//           width: 300,
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//         }}>
+//         <Pressable
+//           title="Log In"
+//           style={styles.primaryButton}
+//           onPress={() => navigation.navigate('Log In')}>
+//           <Text style={styles.buttonText}>Log In</Text>
+//         </Pressable>
+//         <Text>
+//           Don't have an account?{' '}
+//           <Text
+//             style={{
+//               color: '#2F9BC1',
+//               textDecorationLine: 'underline',
+//             }}
+//             onPress={() => navigation.navigate('Sign Up')}>
+//             Sign Up here
+//           </Text>
+//         </Text>
+//       </View>
+//     </View>
+//   );
+// };
 
 // BlueetoothScanner does:
 // - access/enable bluetooth module
@@ -699,23 +702,32 @@ const App: () => Node = () => {
   });
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{title: 'Welcome'}}
-        />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Sign Up" component={SignUp} />
-        <Stack.Screen name="Log In" component={LogIn} />
-        <Stack.Screen name="Connect" component={Connect} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        <Route />
+      </NavigationContainer>
+    </SafeAreaView>
+
+    // <NavigationContainer>
+    //   <Stack.Navigator screenOptions={{headerShown: false}}>
+    //     <Stack.Screen
+    //       name="Home"
+    //       component={HomeScreen}
+    //       options={{title: 'Welcome'}}
+    //     />
+    //     {/* <Stack.Screen name="Profile" component={ProfileScreen} />
+    //     <Stack.Screen name="Sign Up" component={SignUp} />
+    //     <Stack.Screen name="Log In" component={LogIn} />
+    //     <Stack.Screen name="Connect" component={Connect} /> */}
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   backgroundStyle: {
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
