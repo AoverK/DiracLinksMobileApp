@@ -16,6 +16,7 @@ import {
     PermissionsAndroid,
     Dimensions,
   } from 'react-native';
+import Images from '../image/images';
 
 const TestingScreen = ({navigation}) => {
 
@@ -40,7 +41,7 @@ const TestingScreen = ({navigation}) => {
       headerRight: () => (
         <Image
           style={{ width: 40, height: 40, resizeMode:'contain' }}
-          source={ require('../../../DiracIcon_color_001.png')}
+          source={ Images.rightLogo }
         />
       ),
     });
@@ -63,7 +64,7 @@ const TestingScreen = ({navigation}) => {
         <Text style={styles.screenTitleHeader}>Simulate Data</Text>
         <Image 
             style={{ width: 150, height: 70,resizeMode:'contain', margin:10 }}
-            source={ require('../../../Group_107.png')}>
+            source={ Images.testing }>
         </Image>
       </View>
     </View>

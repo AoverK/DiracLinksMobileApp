@@ -14,6 +14,7 @@ import {
     PermissionsAndroid,
     TouchableOpacity,
   } from 'react-native';
+import Images from '../image/images';
 
 const AlertsScreen = ({navigation}) => {
 
@@ -27,7 +28,7 @@ const AlertsScreen = ({navigation}) => {
                 style={{flexDirection:'row', justifyContent:'space-between', width:100, paddingTop:-3}}>
                 <Image
                     style={{ width: 24, height: 24,resizeMode:'contain' , margin:4}}
-                    source={ require('../../../home.png')}
+                    source={ Images.homeIcon }
                 />
                 <Text style={styles.screenTitleHeader}>Home</Text>
             </TouchableOpacity>
@@ -38,15 +39,17 @@ const AlertsScreen = ({navigation}) => {
                 borderBottomColor: '#E7A257',}}>
                 <Image
                     style={{ width: 24, height: 24,resizeMode:'contain' , margin:4}}
-                    source={ require('../../../bell.png')}
+                    source={ Images.bellIcon }
                 />
                 <Text style={styles.screenTitleHeader}>Alerts</Text>
             </TouchableOpacity>
         </View>
-        <Image
-          style={{ width: 40, height: 40,resizeMode:'contain' }}
-          source={ require('../../../DiracIcon_color_001.png')}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('menu')}>
+            <Image
+                style={{ width: 40, height: 40,resizeMode:'contain' }}
+                source={ Images.rightLogo }
+            />
+        </TouchableOpacity>
       </View>
       <TouchableOpacity
         style={{
@@ -61,7 +64,7 @@ const AlertsScreen = ({navigation}) => {
             <View style={styles.alermView}>
                 <Image
                 style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
+                source={ Images.threeCircle }
                 />
                 <View>
                     <Text style={styles.alermTimeText}>2:00pm</Text>
@@ -71,7 +74,7 @@ const AlertsScreen = ({navigation}) => {
             <Image
                 onProgress={() => navigation.navigate('alertsDetail')}
                 style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-                source={ require('../../../dots_3.png')}
+                source={ Images.threeDots }
             />
         </View>
 
@@ -79,7 +82,7 @@ const AlertsScreen = ({navigation}) => {
             <View style={styles.alermView}>
                 <Image
                 style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
+                source={ Images.threeCircle }
                 />
                 <View>
                     <Text style={styles.alermTimeText}>2:00pm</Text>
@@ -88,14 +91,14 @@ const AlertsScreen = ({navigation}) => {
             </View>
             <Image
             style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-            source={ require('../../../dots_3.png')}
+            source={ Images.threeDots }
             />
         </View>
         <View style={styles.alermMainView}>
             <View style={styles.alermView}>
                 <Image
                 style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
+                source={ Images.threeCircle }
                 />
                 <View>
                     <Text style={styles.alermTimeText}>2:00pm</Text>
@@ -104,24 +107,7 @@ const AlertsScreen = ({navigation}) => {
             </View>
             <Image
             style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-            source={ require('../../../dots_3.png')}
-            />
-        </View>
-
-        <View style={styles.alermMainView}>
-            <View style={styles.alermView}>
-                <Image
-                style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
-                />
-                <View>
-                    <Text style={styles.alermTimeText}>2:00pm</Text>
-                    <Text style={styles.alermDateText}>Dec 12, 2021</Text>
-                </View>
-            </View>
-            <Image
-            style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-            source={ require('../../../dots_3.png')}
+            source={ Images.threeDots }
             />
         </View>
 
@@ -129,7 +115,7 @@ const AlertsScreen = ({navigation}) => {
             <View style={styles.alermView}>
                 <Image
                 style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
+                source={ Images.threeCircle }
                 />
                 <View>
                     <Text style={styles.alermTimeText}>2:00pm</Text>
@@ -138,7 +124,7 @@ const AlertsScreen = ({navigation}) => {
             </View>
             <Image
             style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-            source={ require('../../../dots_3.png')}
+            source={ Images.threeDots }
             />
         </View>
 
@@ -146,7 +132,7 @@ const AlertsScreen = ({navigation}) => {
             <View style={styles.alermView}>
                 <Image
                 style={{ width: 80, height: 80,resizeMode:'contain' }}
-                source={ require('../../../circle_1.png')}
+                source={ Images.threeCircle }
                 />
                 <View>
                     <Text style={styles.alermTimeText}>2:00pm</Text>
@@ -155,7 +141,24 @@ const AlertsScreen = ({navigation}) => {
             </View>
             <Image
             style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
-            source={ require('../../../dots_3.png')}
+            source={ Images.threeDots }
+            />
+        </View>
+
+        <View style={styles.alermMainView}>
+            <View style={styles.alermView}>
+                <Image
+                style={{ width: 80, height: 80,resizeMode:'contain' }}
+                source={ Images.threeCircle }
+                />
+                <View>
+                    <Text style={styles.alermTimeText}>2:00pm</Text>
+                    <Text style={styles.alermDateText}>Dec 12, 2021</Text>
+                </View>
+            </View>
+            <Image
+            style={{ width: 40, height: 40,resizeMode:'contain', marginTop:10 }}
+            source={ Images.threeDots }
             />
         </View>
     </View>
