@@ -17,6 +17,7 @@ import {
   } from 'react-native';
   import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
   import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import Images from '../image/images';
   
 const SecurityScreen = ({navigation}) => {
 
@@ -41,7 +42,7 @@ const SecurityScreen = ({navigation}) => {
       headerRight: () => (
         <Image
           style={{ width: 40, height: 40, resizeMode:'contain' }}
-          source={ require('../../../DiracIcon_color_001.png')}
+          source={ Images.rightLogo }
         />
       ),
     });

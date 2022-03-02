@@ -11,6 +11,7 @@ import {
 import SelectDropdown from 'react-native-select-dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faAngleLeft, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import Images from '../image/images';
 
 const AlertsDetailScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
@@ -34,7 +35,7 @@ const AlertsDetailScreen = ({navigation}) => {
       headerRight: () => (
         <Image
           style={{ width: 40, height: 40, resizeMode:'contain' }}
-          source={ require('../../../DiracIcon_color_001.png')}
+          source={ Images.rightLogo }
         />
       ),
     });
@@ -76,7 +77,7 @@ const AlertsDetailScreen = ({navigation}) => {
               return item 
             }}
             /> */}
-             <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={30} />
+             <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={26} />
           </View>
         </View>
 
@@ -98,7 +99,7 @@ const AlertsDetailScreen = ({navigation}) => {
               return item 
             }}
             /> */}
-            <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={30} />
+            <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={26} />
           </View>
         </View>
         <View style={{flexDirection:'row', }}>
@@ -138,7 +139,7 @@ const AlertsDetailScreen = ({navigation}) => {
               return item 
             }}
             /> */}
-            <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={30} />
+            <FontAwesomeIcon style={ styles.dropDownIcon} icon={ faChevronDown } size={26} />
           </View>
         </View>
 
@@ -218,6 +219,7 @@ const styles = StyleSheet.create({
     },
     selectMedia:{
       width:'30%', 
+      fontSize:16,
       color: '#08415C',
       justifyContent:'center',
       alignSelf:'center',
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
     dropDown: {
       backgroundColor: 'white',
       borderWidth: 2,
-      marginTop: 20,
+      marginTop: 10,
       borderColor: '#08415C',
       borderRadius: 10,
       flexDirection:'row',
@@ -235,16 +237,16 @@ const styles = StyleSheet.create({
     },
     dropDownText:{
       color:'#08415C', 
-      padding:10, 
+      padding:6, 
       fontSize:16, 
-      width:170, 
+      width:174, 
       borderRightWidth:2, 
       borderRightColor:'#08415C',
     },
     dropDownIcon:{
       color:'#E79532', 
       margin:2, 
-      paddingRight:10, 
+      paddingRight:5, 
     },
 });
 
