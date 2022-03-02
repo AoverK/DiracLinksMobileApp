@@ -21,6 +21,7 @@ import AccountScreen from './screens/home/account';
 import AlertsScreen from './screens/home/alerts';
 import AlertsDetailScreen from './screens/home/alertsDetail';
 import MediaAlertScreen from './screens/home/mediaAlert';
+import Images from './screens/image/images';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +29,7 @@ const LogoTitle = () => {
     return (
       <Image
         style={{ width: 50, height: 50 }}
-        source={ require('../DiracIcon_color_001.png')}
+        source={ Images.rightLogo }
       />
     );
 };
@@ -188,6 +189,7 @@ const Route = ({navigation}) => {
                     headerShown:false,
                 }}
             />
+            
         </Stack.Navigator>
         
     );

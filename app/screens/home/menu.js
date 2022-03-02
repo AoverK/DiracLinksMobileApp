@@ -18,13 +18,14 @@ import {
   } from 'react-native';
   import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faAngleLeft, faArrowLeft, faCoffee } from '@fortawesome/free-solid-svg-icons';
+import Images from '../image/images';
 
   const MenuScreen = ({navigation}) => {
  
   return (
     <View>
         <ImageBackground
-            source={require('../../../Rectangle_121.png')}
+            source= { Images.backgroundImage }
             style={{width: '100%', height: '100%'}}>
             <ScrollView>
             <View style={{flexDirection:'row', justifyContent:'space-between', margin:10}}>
@@ -36,7 +37,7 @@ import { faAngleLeft, faArrowLeft, faCoffee } from '@fortawesome/free-solid-svg-
                 </TouchableOpacity>
                 <Image
                     style={{ width: 40, height: 40,resizeMode:'contain' }}
-                    source={ require('../../../logo.png')}
+                    source={ Images.rightLogoWhite }
                 />
             </View>
             <View style={{flex: 1, alignItems: 'center' }}>
