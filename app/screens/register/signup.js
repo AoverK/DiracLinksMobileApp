@@ -18,6 +18,7 @@ import {
   } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import firebase from '../../../database/firebase';
 
 const SignUpScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
@@ -46,10 +47,37 @@ const SignUpScreen = ({navigation}) => {
       ),
     });
   }, [navigation]);
-      const [signUpUsernameText, onChangeSignUpUsernameText] = React.useState(null);
-      const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
-      const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] =
-        React.useState(null);
+
+  const [signUpUsernameText, onChangeSignUpUsernameText] = React.useState(null);
+  const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
+  const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] = React.useState(null);
+
+  registerUser = () => {
+    if(signUpUsernameText === '' && signUpPasswordText === '') {
+      Alert.alert('Enter details to signup!')
+    } else {
+      this.setState({
+        isLoading: true,
+      })
+      firebase
+      .auth()
+      .createUserWithEmailAndPassword(signUpUsernameText, signUpPasswordText)
+      .then((res) => {
+        res.user.updateProfile({
+          displayName: this.state.displayName
+        })
+        console.log('User registered successfully!')
+        this.setState({
+          isLoading: false,
+          displayName: '',
+          email: '', 
+          password: ''
+        })
+        this.props.navigation.navigate('Login')
+      })
+      .catch(error => this.setState({ errorMessage: error.message }))      
+    }
+  }
       // const [number, onChangeNumber] = React.useState(null);
       return (
         <View style={styles.backgroundStyle}>
@@ -106,7 +134,7 @@ const SignUpScreen = ({navigation}) => {
             <Pressable
               title="Sign Up"
               style={styles.primaryButton}
-              onPress={() => navigation.navigate('login')}>
+              onPress={() => this.registerUser()}>
               <Text style={styles.buttonText}>Sign Up</Text>
             </Pressable>
             <Text style={styles.formFieldLabel}>
