@@ -18,6 +18,11 @@ import {
   } from 'react-native';
   import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
   import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import Images from '../image/images';
+  
+
+// const img=require('../../../circle1.png');
+  // console.log(img);
 
 const ConnectedScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
@@ -41,7 +46,7 @@ const ConnectedScreen = ({navigation}) => {
       headerRight: () => (
         <Image
           style={{ width: 40, height: 40, resizeMode:'contain' }}
-          source={ require('../../../DiracIcon_color_001.png')}
+          source={ Images.rightLogo }
         />
       ),
     });
@@ -66,7 +71,7 @@ const ConnectedScreen = ({navigation}) => {
         }}>
         <Image
           style={{ width: 250, height: 250,resizeMode:'contain' }}
-          source={ require('../../../circle1.png')}
+          source={ Images.circle}
         />
       </View>
       <View

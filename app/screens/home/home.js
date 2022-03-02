@@ -15,17 +15,18 @@ import {
     View,
     PermissionsAndroid,
   } from 'react-native';
+import Images from '../image/images';
   
 
 const Home = ({navigation}) => {
     return (
         <View>
             <ImageBackground
-                source={require('../../../Background_001.png')}
+                source={ Images.backgroundHome }
                 style={{width: '100%', height: '100%'}}>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <Image
-                        source={require('../../../TransparentLogo_001.png')}
+                        source={ Images.logoMain }
                         style={{marginBottom: 20, width: 150, height: 150}}
                     />
                     <Pressable
