@@ -18,7 +18,8 @@ import {
   } from 'react-native';
   import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
   import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import Images from '../image/images';
+  import Images from '../image/images';
+  import firebase from '../../../database/firebase';
 
 const logInScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
@@ -50,6 +51,48 @@ const logInScreen = ({navigation}) => {
 
   const [logInUsernameText, onChangeLogInUsernameText] = React.useState(null);
   const [logInPasswordText, onChangeLogInPasswordText] = React.useState(null);
+
+  userLogin = () => {
+
+    /* constructor() {
+      super();
+      this.state = { 
+        displayName: '',
+        email: '', 
+        password: '',
+        isLoading: false
+      }
+    } */
+
+    if(logInUsernameText === '' && logInPasswordText === '') {
+      Alert.alert('Enter details to signin!')
+    } else {
+      /* this.setState({
+        isLoading: true,
+      }) */
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(logInUsernameText, logInPasswordText)
+      .then((res) => {
+        console.log();
+        console.log(res)
+        console.log('User logged-in successfully!')
+        /* this.setState({
+          isLoading: false,
+          email: '', 
+          password: ''
+        }) */
+        navigation.navigate('dashboard')
+      })
+      .catch(error => {
+
+        console.log("Username: ", logInUsernameText);
+        console.log("Password: ", logInPasswordText);
+        alert(error);
+        console.log(error);
+      })
+    }
+  }
   return (
     <View style={styles.backgroundStyle}>
     <ScrollView>
@@ -99,7 +142,7 @@ const logInScreen = ({navigation}) => {
         <Pressable
           title="Log In"
           style={styles.primaryButton}
-          onPress={() => navigation.navigate('disconnected')}>
+          onPress={() => userLogin()}>
           <Text style={styles.buttonText}>Log In</Text>
         </Pressable>
         <Text style={styles.formFieldLabel}>

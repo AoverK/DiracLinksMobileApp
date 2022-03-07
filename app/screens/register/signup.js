@@ -19,6 +19,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import Images from '../image/images';
+import firebase from '../../../database/firebase';
 
 const SignUpScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
@@ -51,6 +52,44 @@ const SignUpScreen = ({navigation}) => {
       const [signUpPasswordText, onChangeSignUpPasswordText] = React.useState(null);
       const [signUpConfirmPasswordText, onChangeSignUpConfirmPasswordText] =
         React.useState(null);
+        
+        registerUser = () => {
+            console.log("Username: ", signUpUsernameText);
+            console.log("Password: ", signUpPasswordText);
+            console.log("ConfirmPass: ", signUpConfirmPasswordText);
+            if(signUpUsernameText === '' && signUpPasswordText === '') {
+              Alert.alert('Enter details to signup!');
+            } 
+            if (signUpPasswordText != signUpConfirmPasswordText) {
+                Alert.alert('Passwords not equal!');
+            } else {
+              /* this.setState({
+                isLoading: true,
+              }) */
+              firebase
+              .auth()
+              .createUserWithEmailAndPassword(signUpUsernameText, signUpPasswordText)
+              .then((res) => {
+                /* res.user.updateProfile({
+                  displayName: this.state.displayName
+                }) */
+                console.log(res);
+                console.log('User registered successfully!');
+                /* this.setState({
+                  isLoading: false,
+                  displayName: '',
+                  email: '', 
+                  password: ''
+                }) */
+                navigation.navigate('login')
+              })
+              .catch(error => {
+                console.log("Username: ", signUpUsernameText);
+                console.log("Password: ", signUpPasswordText);
+                  console.log(error);
+                })      
+            }
+          }
       // const [number, onChangeNumber] = React.useState(null);
       return (
         <View style={styles.backgroundStyle}>
@@ -79,7 +118,7 @@ const SignUpScreen = ({navigation}) => {
             <View style={styles.formFieldTextView}>
               <TextInput
                 style={styles.formFieldTextInput}
-                signUpPasswordText={onChangeSignUpPasswordText}
+                onChangeText={onChangeSignUpPasswordText}
                 value={signUpPasswordText}
                 placeholder="Enter your password"
                 secureTextEntry={true}
@@ -89,7 +128,7 @@ const SignUpScreen = ({navigation}) => {
             <View style={styles.formFieldTextView}>
               <TextInput
                 style={styles.formFieldTextInput}
-                signUpConfirmPasswordText={onChangeSignUpConfirmPasswordText}
+                onChangeText={onChangeSignUpConfirmPasswordText}
                 value={signUpConfirmPasswordText}
                 placeholder="Confirm your password"
                 secureTextEntry={true}
@@ -107,7 +146,7 @@ const SignUpScreen = ({navigation}) => {
             <Pressable
               title="Sign Up"
               style={styles.primaryButton}
-              onPress={() => navigation.navigate('login')}>
+              onPress={() => registerUser()}>
               <Text style={styles.buttonText}>Sign Up</Text>
             </Pressable>
             <Text style={styles.formFieldLabel}>

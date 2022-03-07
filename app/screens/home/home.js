@@ -41,12 +41,12 @@ const Home = ({navigation}) => {
                         onPress={() => navigation.navigate('signup')}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </Pressable>
-                    {/* <Pressable
+                    <Pressable
                         title="Connect"
                         style={styles.tertiaryButton}
                         onPress={() => navigation.navigate('Connect')}>
                         <Text style={styles.buttonText}>Connect</Text>
-                    </Pressable> */}
+                    </Pressable>
                 </View>
             </ImageBackground>
         </View>
