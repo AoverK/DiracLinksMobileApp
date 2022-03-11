@@ -55,6 +55,12 @@ const DisconnectedScreen = ({navigation}) => {
           width: 300,
         }}>
         <Text style={styles.formFieldLabel}>You aren't connected. Turn on and connect to your DirectLink to start your wellness journey</Text>
+        <Pressable
+            title="Connect"
+            style={styles.tertiaryButton}
+            onPress={() => navigation.navigate('connect')}>
+            <Text style={styles.buttonText}>Connect</Text>
+        </Pressable>
 
       </View>
       <View

@@ -1,21 +1,17 @@
 import React from 'react';
 import {
-    Button,
     Pressable,
-    FlatList,
     Image,
     ImageBackground,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
-    TextInput,
-    useColorScheme,
     View,
-    PermissionsAndroid,
   } from 'react-native';
 import Images from '../image/images';
+import firebase from '../../../database/firebase';
+
+//let currentUser = firebase.auth().currentUser.uid.toString();
+//console.log("Home Check Logged In User: ", currentUser);
   
 
 const Home = ({navigation}) => {
@@ -41,12 +37,12 @@ const Home = ({navigation}) => {
                         onPress={() => navigation.navigate('signup')}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </Pressable>
-                    <Pressable
+                    {/* <Pressable
                         title="Connect"
                         style={styles.tertiaryButton}
-                        onPress={() => navigation.navigate('Connect')}>
+                        onPress={() => navigation.navigate('connect')}>
                         <Text style={styles.buttonText}>Connect</Text>
-                    </Pressable>
+                    </Pressable> */}
                 </View>
             </ImageBackground>
         </View>

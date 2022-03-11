@@ -1,4 +1,5 @@
 import React from 'react';
+import {Node, useState, useEffect, useRef} from 'react';
 import {
   Pressable,
   Image,
@@ -25,6 +26,7 @@ import {
   StackedBarChart
 } from "react-native-chart-kit";
 import Images from '../image/images';
+import firebase from '../../../database/firebase';
 
 const screenWidth = Dimensions.get("window").width - 50;
 const data = {
@@ -39,7 +41,56 @@ const data = {
   // legend: ["Rainy Days"] // optional
 };
 
+
+//getData();
+
+async function getData() {
+  let currentUser = firebase.auth().currentUser.uid.toString();
+  if (currentUser != null){
+      /* firebase.firestore().collection('users').doc(currentUser)
+      .collection('data_historical').doc().set({ user: currentUser, timestamp: timestamp, timestamp_seconds: timestampSeconds, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+      .catch(err =>{
+          console.log(err);
+      }); */
+
+      const livestreamDoc = await firebase.firestore().collection('users').doc(currentUser)
+      .collection('data_current').doc('livestream').get()
+      .catch(err =>{
+          console.log(err);
+      });
+      if (!livestreamDoc.exists) {
+        console.log('No such document!');
+      } else {
+        console.log('Document data:', livestreamDoc.data());
+        console.log("Livestream HR Value: ", livestreamDoc.data().hr_value);
+        const hrValue = await livestreamDoc.data().hr_value;
+        return hrValue;
+      }
+  }
+}
+
 const DashboardScreen = ({ navigation }) => {
+  
+  const [hrValue, setHRValue] = useState(0);
+  const [hrHistoricalData, setHRHistoricalData] = useState(0);
+
+  //setHRValue(getData()); 
+
+
+  /* useEffect(() => {
+    
+    manager.onStateChange(state => {
+      const subscription = manager.onStateChange(async state => {
+        console.log(state);
+        const newLogData = logData;
+        newLogData.push(state);
+        await setLogCount(newLogData.length);
+        await setLogData(newLogData);
+        subscription.remove();
+      }, true);
+      return () => subscription.remove();
+    });
+  }, [manager]); */
 
   return (
     <View style={styles.backgroundStyle}>
@@ -106,7 +157,7 @@ const DashboardScreen = ({ navigation }) => {
               marginBottom:20,
             }}
           />
-
+          <Text style={styles.screenTitleHeader}>{hrValue}</Text>
           <Image
             style={{ width: 250, height: 250, resizeMode: 'contain' }}
             source={ Images.circle }
