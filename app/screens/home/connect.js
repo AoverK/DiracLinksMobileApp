@@ -28,6 +28,7 @@
  export const manager = new BleManager();
  
  import {
+   Alert,
    Button,
    Pressable,
    FlatList,
@@ -93,13 +94,7 @@
          });
      }
 
-     if (data > 70) {
-        navigation.navigate('alerts')
-     }
-
-
-   
-
+     
  }
 
  function handleCharacteristicValueChanged(event) {

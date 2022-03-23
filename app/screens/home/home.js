@@ -10,8 +10,6 @@ import {
 import Images from '../image/images';
 import firebase from '../../../database/firebase';
 
-//let currentUser = firebase.auth().currentUser.uid.toString();
-//console.log("Home Check Logged In User: ", currentUser);
   
 
 const Home = ({navigation}) => {
