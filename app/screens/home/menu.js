@@ -51,6 +51,9 @@ import Images from '../image/images';
                 <TouchableOpacity onPress={() => navigation.navigate('mediaAlert')}>
                     <Text style={styles.menuText}>Alerts</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('connect')}>
+                    <Text style={styles.menuText}>Connect</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('settings')}>
                     <Text style={styles.menuText}>Settings</Text>
                 </TouchableOpacity>

@@ -8,6 +8,7 @@ import Home from './screens/home/home';
 import logInScreen from './screens/register/login';
 import SignUpScreen from './screens/register/signup';
 import PasswordScreen from './screens/register/forgotpassword';
+import Connect from './screens/home/connect';
 import DisconnectedScreen from './screens/home/disconnected';
 import ConnectedScreen from './screens/home/connected';
 import CommunityScreen from './screens/home/community';
@@ -77,6 +78,13 @@ const Route = ({navigation}) => {
             <Stack.Screen
                 name="forgotpassword"
                 component={PasswordScreen}
+                options={{
+                    headerRight: props => <LogoTitle {...props} />,
+                }}
+            />
+            <Stack.Screen
+                name="connect"
+                component={Connect}
                 options={{
                     headerRight: props => <LogoTitle {...props} />,
                 }}

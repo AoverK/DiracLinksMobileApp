@@ -1,6 +1,6 @@
 const Images = {
     rightLogo: require('../../../img/DiracIcon_color_001.png'),
-    circle: require('../../../img/circle1.png'),
+    circle: require('../../../img/circle.png'),
     rightLogoWhite:require('../../../img/logo.png'),
     homeIcon: require('../../../img/home.png'),
     bellIcon: require('../../../img/bell.png'),

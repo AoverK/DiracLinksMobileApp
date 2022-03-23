@@ -1,5 +1,7 @@
 import React from 'react';
+import {Node, useState, useEffect, useRef} from 'react';
 import {
+  Alert,
   Pressable,
   Image,
   ImageBackground,
@@ -25,6 +27,7 @@ import {
   StackedBarChart
 } from "react-native-chart-kit";
 import Images from '../image/images';
+import firebase from '../../../database/firebase';
 
 const screenWidth = Dimensions.get("window").width - 50;
 const data = {
@@ -39,7 +42,76 @@ const data = {
   // legend: ["Rainy Days"] // optional
 };
 
+
+//getData();
+
+
+
 const DashboardScreen = ({ navigation }) => {
+  
+  const [hrValue, setHRValue] = useState(0);
+  const [hrHistoricalData, setHRHistoricalData] = useState(0);
+
+  //setHRValue(getData()); 
+
+
+  useEffect(() => {
+    
+    const streamData = getData();
+    //setHRValue(streamData);
+  }, []);
+
+  async function getData() {
+    let currentUser = firebase.auth().currentUser.uid.toString();
+    if (currentUser != null){
+        /* firebase.firestore().collection('users').doc(currentUser)
+        .collection('data_historical').doc().set({ user: currentUser, timestamp: timestamp, timestamp_seconds: timestampSeconds, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+        .catch(err =>{
+            console.log(err);
+        }); */
+  
+        /* const doc = db.collection('cities').doc('SF');
+  
+      const observer = doc.onSnapshot(docSnapshot => {
+        console.log(`Received doc snapshot: ${docSnapshot}`);
+        // ...
+      }, err => {
+        console.log(`Encountered error: ${err}`);
+      }); */
+  
+        /* const livestreamDoc = await firebase.firestore().collection('users').doc(currentUser)
+        .collection('data_current').doc('livestream').get()
+        .catch(err =>{
+            console.log(err);
+        }); */
+  
+        const livestreamObserver = await firebase.firestore().collection('users').doc(currentUser)
+        .collection('data_current').doc('livestream').onSnapshot(docSnapshot => {
+          //console.log(`Received doc snapshot: ${docSnapshot}`);
+          const hrValue = docSnapshot.data().hr_value;
+          console.log(hrValue);
+          setHRValue(hrValue);
+
+          if (hrValue > 85) {
+            alert("You seem stressed. BPM: "+ hrValue);
+            console.log("Stress alert. BPM: ", hrValue);
+         }
+          // ...
+        }, err => {
+          console.log(`Encountered error: ${err}`);
+        });
+        
+  
+        /* if (!livestreamDoc.exists) {
+          console.log('No such document!');
+        } else {
+          console.log('Document data:', livestreamDoc.data());
+          console.log("Livestream HR Value: ", livestreamDoc.data().hr_value);
+          const hrValue = await livestreamDoc.data().hr_value;
+          return hrValue;
+        } */
+    }
+  }
 
   return (
     <View style={styles.backgroundStyle}>
@@ -106,11 +178,16 @@ const DashboardScreen = ({ navigation }) => {
               marginBottom:20,
             }}
           />
-
-          <Image
+          
+          <ImageBackground
             style={{ width: 250, height: 250, resizeMode: 'contain' }}
             source={ Images.circle }
-          />
+          >
+            <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+
+            <Text style={styles.dataImageOverlayText}>{hrValue}</Text>
+            </View>
+          </ImageBackground>
         </View>
         <View
           style={{
@@ -144,6 +221,10 @@ const styles = StyleSheet.create({
   screenTitleSubHeader: {
     fontSize: 18,
     color: '#2F9BC1',
+  },
+  dataImageOverlayText: {
+    fontSize: 38,
+    color: '#FFFFFF',
   },
   formFieldLabel: {
     marginTop: 20,

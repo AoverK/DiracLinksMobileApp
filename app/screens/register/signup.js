@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Alert,
     Button,
     Pressable,
     FlatList,
@@ -75,6 +76,38 @@ const SignUpScreen = ({navigation}) => {
                 }) */
                 console.log(res);
                 console.log('User registered successfully!');
+                let timestamp = new Date();
+                let timestampSeconds = timestamp.getTime() / 1000;
+                let currentUser = firebase.auth().currentUser.uid.toString();
+                //let identifierString = identifier;
+                //let deviceDataString = data;
+                console.log("Current User:", currentUser);
+                if (currentUser != null){
+                  // Create User
+                  // Created account, data_current, data_historical subcollections
+                  /* {"additionalUserInfo": 
+                      {"isNewUser": true, "profile": {}, "providerId": "password"}, 
+                    "credential": null, 
+                    "operationType": "signIn", 
+                    "user": {"_redirectEventId": undefined, "apiKey": "AIzaSyBpC7Bjt2HHiWznD_Y7QkTC9zFtzC8Z4zw", "appName": "[DEFAULT]", "createdAt": "1646891272346", "displayName": undefined, "email": "testa@xscapeco.com", "emailVerified": false, "isAnonymous": false, "lastLoginAt": "1646891272346", "phoneNumber": undefined, "photoURL": undefined, "providerData": [Array], "stsTokenManager": [Object], "tenantId": undefined, "uid": "ELkHaI4pFCb0GToafoNUvoT2YRE3"}} */
+                  /* users [collection]
+                    - {uid} [doc]
+                      - account [collection] 
+                      //- data_current [collection]
+                      - data_historical [collection] */
+                    //firebase.firestore().
+                    //firebase.firestore().collection(currentUser).set({ user: currentUser, timestamp: timestamp, timestamp_seconds: timestampSeconds, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+                    //firebase.firestore().collection('users').doc(currentUser).collection('account').doc().set({ roles: ["USER"], account: res })
+                    //firebase.firestore().collection('users').doc(currentUser).set({ user: currentUser, timestamp: timestamp, timestamp_seconds: timestampSeconds, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+                    //firebase.firestore().collection('users').doc(currentUser).doc("user_data").set({ timestamp: timestamp, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+                    //firebase.firestore().collection('users').doc(currentUser).doc("user_data_history").add({ timestamp: timestamp, identifier: identifierString, hr_name: "HR", hr_value: deviceDataString })
+                    firebase.firestore().collection('users').doc(currentUser).set({ account: {roles: ["USER"], email: res.user.email}})
+                    .catch(err =>{
+                        console.log(err);
+
+                    });
+                    //console.log("User data written");
+                }
                 /* this.setState({
                   isLoading: false,
                   displayName: '',
@@ -87,6 +120,7 @@ const SignUpScreen = ({navigation}) => {
                 console.log("Username: ", signUpUsernameText);
                 console.log("Password: ", signUpPasswordText);
                   console.log(error);
+                  Alert.alert(error.message);
                 })      
             }
           }
